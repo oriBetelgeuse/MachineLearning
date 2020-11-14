@@ -12,7 +12,11 @@ class TimeSeriesTransformer(tf.keras.models.Model):
         self.final_layer = tf.keras.layers.Dense(target)
 
     def call(self, data, training=None, mask=None):
+        batch_size = tf.shape(data)[0]
+
         encoder_output = self.encoder(data, training, mask)
+        encoder_output = tf.reshape(encoder_output, (batch_size, -1))
+
         final_output = self.final_layer(encoder_output)
 
         return final_output
